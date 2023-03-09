@@ -1,5 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import Webcam from 'react-webcam';
+import { RadioButtonUncheckedOutlined } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { setCameraImage } from '../features/cameraSlice';
 
 const videoConstraints = {
   width: 250,
@@ -9,7 +12,13 @@ const videoConstraints = {
 
 function WebcamCapture() {
 
-  const webcamRef = useRef(null)
+  const webcamRef = useRef(null);
+  const dispatch = useDispatch();
+  
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    dispatch(setCameraImage(imageSrc));
+  }, [webcamRef])
 
   return (
     <div className='webcamCapture'>
@@ -20,6 +29,11 @@ function WebcamCapture() {
         ref={webcamRef}
         screenshotFormat='image/jpeg'
         videoConstraints={videoConstraints}
+      />
+
+      <RadioButtonUncheckedOutlined
+        className='webcamCapture__button'
+        onClick={capture}
       />
     </div>
   )
