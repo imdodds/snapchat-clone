@@ -24,7 +24,7 @@ function Chat({ id, username, timestamp, read, imageUrl, profilePic }) {
         { merge: true }
       );
 
-      // navigate('/chats/view');
+      navigate('/chats/view');
     }
   };
 
