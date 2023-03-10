@@ -7,11 +7,14 @@ import { v4 as uuid } from 'uuid';
 import firebase from 'firebase/compat/app';
 import { db, storage } from '../firebase';
 import '../styles/Preview.css';
+import { selectUser } from '../features/appSlice';
 
 
 function Preview() {
 
   const cameraImage = useSelector(selectCameraImage);
+
+  const user = useSelector(selectUser);
 
   const navigate = useNavigate();
 
@@ -52,6 +55,7 @@ function Preview() {
               imageUrl: url,
               username: 'Ian',
               read: false,
+              profilePic: user.profilePic,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             });
             navigate('/chats');

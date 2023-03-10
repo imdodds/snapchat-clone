@@ -1,13 +1,23 @@
-import { ChatBubble, Search } from '@mui/icons-material';
+import { ChatBubble, RadioButtonUnchecked, Search } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { db } from '../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../features/appSlice';
+import { resetCameraImage } from '../features/cameraSlice';
+import { auth, db } from '../firebase';
 import '../styles/Chats.css';
 import Chat from './Chat';
 
 function Chats() {
 
   const [posts, setPosts] = useState([]);
+  
+  const user = useSelector(selectUser);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     db.collection('posts')
@@ -22,12 +32,21 @@ function Chats() {
       );
   }, [])
 
+  const takeSnap = () => {
+    dispatch(resetCameraImage());
+    navigate('/');
+  }
+
   return (
     <div className='chats'>
       <div className="chats__header">
-        <Avatar className='chats__avatar' />
+        <Avatar
+          src={user.profilePic}
+          onClick={() => auth.signOut()}
+          className='chats__avatar'
+        />
         <div className="chats__search">
-          <Search />
+          <Search className='chats__searchIcon' />
           <input placeholder='Friends' type='text' />
         </div>
         <ChatBubble className='chats__chatIcon' />
@@ -45,6 +64,11 @@ function Chats() {
           />
         ))}
       </div>
+      <RadioButtonUnchecked
+        className='chats__takePicIcon'
+        onClick={takeSnap}
+        fontSize='large'
+      />
     </div>
   )
 }
